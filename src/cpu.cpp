@@ -3,9 +3,9 @@
 #include "../include/logging.hpp"
 
 CPU::CPU() {
-    LOG_INFO("CPU initializing\n");
+    LOG_INFO("CPU initializing");
 }
 
 CPU::~CPU() {
-    LOG_INFO("CPU shutting down\n");
+    LOG_INFO("CPU shutting down");
 }
