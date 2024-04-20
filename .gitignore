@@ -4,3 +4,6 @@ build
 
 # Obsidian
 .obsidian
+
+# VSCode
+.vscode
