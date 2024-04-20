@@ -1,11 +1,14 @@
 #include <string>
 #include <cstdio>
 
+#include "cpu.cpp"
 #include "memory.cpp"
 
 int main(void) {
-    Memory memory;
+    CPU cpu;
 
-    memory.write32(0, 0x12345678);
-    printf("0x%08X\n", memory.read32(0));
+    cpu.memory.write32(0xFFFFFFFB, 0x12345678);
+    (void)cpu.memory.read32(0xFFFFFFFB);
+
+    return 0;
 }
