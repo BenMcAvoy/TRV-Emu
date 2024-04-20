@@ -10,6 +10,9 @@ set(CMAKE_CXX_STANDARD 20)
 # Build the project
 add_executable(TRV-Emu src/main.cpp)
 
+# Add include dir
+target_include_directories(TRV-Emu PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
+
 if (UNIX)
 	# Enable all warnings and treat them as errors
 	target_compile_options(TRV-Emu PRIVATE -Wall -Wextra -Wpedantic -Werror)
