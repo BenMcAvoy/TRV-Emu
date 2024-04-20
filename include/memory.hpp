@@ -9,7 +9,7 @@ class Memory {
         Memory();
         ~Memory();
 
-        void write32(uint32_t address, uint32_t value);
+        uint8_t write32(uint32_t address, uint32_t value);
         uint32_t read32(uint32_t address);
 
     private:

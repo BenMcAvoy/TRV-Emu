@@ -1,21 +1,58 @@
+#include <string>
+
 #include "../include/memory.hpp"
+#include "../include/logging.hpp"
+
+constexpr uint32_t MEMORY_SIZE = 0xFFFFFFFF;
+static_assert(MEMORY_SIZE > 0, "Memory size must be greater than 0");
+static_assert(MEMORY_SIZE <= 4294967296, "Memory size must be less than or equal to the 32-bit max value");
 
 Memory::Memory() {
-    memory = new uint8_t[1024 * 1024];
+    memory = new uint8_t[MEMORY_SIZE];
+    LOG_INFO("Memory initializing\n");
 }
 
 Memory::~Memory() {
+    LOG_INFO("Memory deinitalizing\n");
     delete[] memory;
 }
 
-void Memory::write32(uint32_t address, uint32_t value) {
+// NOTE: 1 is returned if the address is out of bounds
+uint8_t Memory::write32(uint32_t address, uint32_t value) {
+    LOG_DEBUG("Writing 0x%08X to 0x%08X\n", value, address);
+
+    if (address > (MEMORY_SIZE - 4)) {
+        char* errorFormatted = new char[48];
+        snprintf(errorFormatted, 48, "Memory address wrote out of bounds: 0x%08X\n", address);
+        LOG_ERROR(errorFormatted);
+        delete[] errorFormatted;
+
+        return 1;
+    }
+
     write8(address, value & 0xFF);
     write8(address + 1, (value >> 8) & 0xFF);
     write8(address + 2, (value >> 16) & 0xFF);
     write8(address + 3, (value >> 24) & 0xFF);
+
+    LOG_DEBUG("Wrote 0x%08X to 0x%08X\n", value, address);
+
+    return 0;
 }
 
+// NOTE: 0 is returned if the address is out of bounds
 uint32_t Memory::read32(uint32_t address) {
+    LOG_DEBUG("Reading from 0x%08X\n", address);
+
+    if (address > (MEMORY_SIZE - 4)) {
+        char* errorFormatted = new char[48];
+        snprintf(errorFormatted, 48, "Memory address read out of bounds: 0x%08X\n", address);
+        LOG_ERROR(errorFormatted);
+        delete[] errorFormatted;
+
+        return 0;
+    }
+
     uint32_t value = 0;
     value |= read8(address);
     value |= read8(address + 1) << 8;
