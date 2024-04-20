@@ -1,3 +1,6 @@
 # CMake output
 .cache
 build
+
+# Obsidian
+.obsidian
