@@ -4,6 +4,7 @@
 
 #include "printf_hook.hpp"
 #include "globals.cpp"
+#include "fonts.hpp"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -58,8 +59,15 @@ int main(void) {
     ImGui::CreateContext();
     LOG_INFO("ImGui context created");
 
-    ImGuiIO &io = ImGui::GetIO();
-    (void)io;
+    ImGuiIO& io = ImGui::GetIO();
+    ImFontConfig config;
+	config.FontDataOwnedByAtlas = false;
+	io.Fonts->AddFontFromMemoryTTF(fonts::JetBrainsMonoNerdFont_Regular_ttf, sizeof(fonts::JetBrainsMonoNerdFont_Regular_ttf), 16.0f, &config, io.Fonts->GetGlyphRangesDefault());
+
+    if (io.Fonts->Fonts.empty())
+		LOG_ERROR("Failed to load font\n");
+
+    LOG_INFO("Font loaded");
 
     ImGui::StyleColorsDark();
 
@@ -71,16 +79,19 @@ int main(void) {
 
     CPU cpu;
 
+    LOG_INFO("Info example");
+    LOG_WARN("Warn example");
+    LOG_ERROR("Error example");
+    LOG_DEBUG("Debug example");
+
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
-
         ImGui::NewFrame();
 
-        // Draw the log window
-        ImGui::Begin("TRV Emu Log");
+        ImGui::Begin("Log");
         ImGui::Checkbox("Debug", &showDebug);
         ImGui::SameLine();
         ImGui::Checkbox("Info", &showInfo);
@@ -122,12 +133,29 @@ void drawLog() {
     std::string to;
 
     while (std::getline(ss, to, '\n')) {
-        bool show = showInfo && strstr(to.c_str(), "INFO")
-            || showWarn && strstr(to.c_str(), "WARN")
-            || showError && strstr(to.c_str(), "ERROR")
-            || showDebug && strstr(to.c_str(), "DEBUG");
+        bool isInfo = strstr(to.c_str(), "INFO");
+        bool isWarn = strstr(to.c_str(), "WARN");
+        bool isError = strstr(to.c_str(), "ERROR");
+        bool isDebug = strstr(to.c_str(), "DEBUG");
 
-        if (show)
-            ImGui::Text("%s", to.c_str());
+        bool show = isInfo && showInfo
+            || isWarn && showWarn
+            || isError && showError
+            || isDebug && showDebug;
+
+        if (show) {
+            if (isDebug) {
+                ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "%s", to.c_str());
+            } else if (isInfo) {
+                ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "%s", to.c_str());
+            } else if (isError) {
+                ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "%s", to.c_str());
+            } else if (isWarn) {
+                ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "%s", to.c_str());
+            } else {
+                ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "%s", to.c_str());
+            }
+        }
+        //ImGui::Text("%s", to.c_str());
     }
 }
