@@ -22,11 +22,7 @@ uint8_t Memory::write32(uint32_t address, uint32_t value) {
     LOG_DEBUG("Writing 0x%08X to 0x%08X\n", value, address);
 
     if (address > (MEMORY_SIZE - 4)) {
-        char* errorFormatted = new char[48];
-        snprintf(errorFormatted, 48, "Memory address wrote out of bounds: 0x%08X\n", address);
-        LOG_ERROR(errorFormatted);
-        delete[] errorFormatted;
-
+        LOG_ERROR("Memory address wrote out of bounds: 0x%08X\n", address);
         return 1;
     }
 
@@ -45,11 +41,7 @@ uint32_t Memory::read32(uint32_t address) {
     LOG_DEBUG("Reading from 0x%08X\n", address);
 
     if (address > (MEMORY_SIZE - 4)) {
-        char* errorFormatted = new char[48];
-        snprintf(errorFormatted, 48, "Memory address read out of bounds: 0x%08X\n", address);
-        LOG_ERROR(errorFormatted);
-        delete[] errorFormatted;
-
+        LOG_ERROR("Memory address read out of bounds: 0x%08X\n", address);
         return 0;
     }
 
