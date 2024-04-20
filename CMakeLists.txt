@@ -29,7 +29,7 @@ add_executable(TRV-Emu src/main.cpp)
 target_link_libraries(TRV-Emu glfw imgui)
 
 # Add include dir
-target_include_directories(TRV-Emu PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
+target_include_directories(TRV-Emu PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include ${PROJECT_SOURCE_DIR}/src)
 
 # Link with OpenGL
 find_package(OpenGL REQUIRED)
