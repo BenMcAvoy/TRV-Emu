@@ -3,6 +3,8 @@
 
 #include "memory.hpp"
 
+// TODO: Implement FDE cycle
+// This should be done in `cpu.cpp`
 class CPU {
     public:
         CPU(Memory* memory);
