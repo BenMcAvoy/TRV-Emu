@@ -50,6 +50,9 @@ uint32_t Memory::read32(uint32_t address) {
     value |= read8(address + 1) << 8;
     value |= read8(address + 2) << 16;
     value |= read8(address + 3) << 24;
+
+    LOG_DEBUG("Read 0x%08X from 0x%08X", value, address);
+
     return value;
 }
 
