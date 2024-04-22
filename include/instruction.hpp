@@ -15,7 +15,7 @@ enum OpCode {
     AND   = 0b0110011,
     SLL   = 0b0110011,
     SRL   = 0b0110011,
-    SRA   =  0b0110011,
+    SRA   = 0b0110011,
     SLT   = 0b0110011,
     SLTU  = 0b0110011,
 

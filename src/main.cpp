@@ -27,9 +27,9 @@
 void drawLog();
 std::vector<uint8_t> loadExeFile(const std::string& filePath);
 
-bool showDebug = false;
-bool showInfo = false;
-bool showWarn = true;
+bool showDebug = true;
+bool showInfo  = true;
+bool showWarn  = true;
 bool showError = true;
 
 static MemoryEditor mem_edit;
