@@ -2,7 +2,6 @@
 #include <string>
 #include <cstdio>
 
-#include "printf_hook.hpp"
 #include "globals.cpp"
 #include "fonts.hpp"
 
@@ -138,10 +137,10 @@ void drawLog() {
         bool isError = strstr(to.c_str(), "ERROR");
         bool isDebug = strstr(to.c_str(), "DEBUG");
 
-        bool show = isInfo && showInfo
-            || isWarn && showWarn
-            || isError && showError
-            || isDebug && showDebug;
+        bool show = (isInfo && showInfo)
+            || (isWarn && showWarn)
+            || (isError && showError)
+            || (isDebug && showDebug);
 
         if (show) {
             if (isDebug) {
@@ -156,6 +155,5 @@ void drawLog() {
                 ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "%s", to.c_str());
             }
         }
-        //ImGui::Text("%s", to.c_str());
     }
 }
