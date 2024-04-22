@@ -1,6 +1,9 @@
 #ifndef LOGGING_HPP
 #define LOGGING_HPP
 
+#include "globals.cpp"
+#include <string>
+
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
