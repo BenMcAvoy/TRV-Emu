@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include <sstream>
 #include <string>
 #include <cstdio>
@@ -14,6 +15,7 @@
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
+#include "imgui_memory_editor.h"
 
 #include "machine.cpp"
 /* #include "cpu.cpp" */
@@ -25,6 +27,11 @@ bool showDebug = false;
 bool showInfo = false;
 bool showWarn = true;
 bool showError = true;
+
+static MemoryEditor mem_edit;
+
+uint32_t addr = 0x00000000;
+uint32_t value = 0x00000000;
 
 int main(void) {
     GLFWwindow *window;
@@ -89,9 +96,21 @@ int main(void) {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        mem_edit.DrawWindow("Memory Editor", (void *)machine.memory.memory, sizeof(machine.memory.memory));
+
         ImGui::Begin("Control");
         if (ImGui::Button("Step"))
             machine.step();
+
+        ImGui::InputScalar("Address", ImGuiDataType_U32, &addr, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("Value", ImGuiDataType_U32, &value, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+
+        if (ImGui::Button("Read"))
+            (void)machine.memory.read32(addr);
+
+        if (ImGui::Button("Write"))
+            machine.memory.write32(addr, value);
+
         ImGui::End();
 
         ImGui::Begin("Log");

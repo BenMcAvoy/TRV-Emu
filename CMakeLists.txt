@@ -4,6 +4,7 @@ project(TRV-Emu)
 
 # Lib paths
 set(IMGUI_PATH ${PROJECT_SOURCE_DIR}/libs/imgui)
+set(IMGUI_CLUB_PATH ${PROJECT_SOURCE_DIR}/libs/imgui_club)
 set(GLFW_PATH ${PROJECT_SOURCE_DIR}/libs/glfw)
 
 # Build options
@@ -20,7 +21,7 @@ add_subdirectory(${GLFW_PATH})
 # Configure ImGui
 file(GLOB IMGUI_SOURCES ${IMGUI_PATH}/*.cpp ${IMGUI_PATH}/backends/imgui_impl_glfw.cpp ${IMGUI_PATH}/backends/imgui_impl_opengl3.cpp)
 add_library(imgui STATIC ${IMGUI_SOURCES})
-target_include_directories(imgui PUBLIC ${IMGUI_PATH} ${GLFW_PATH}/include)
+target_include_directories(imgui PUBLIC ${IMGUI_PATH} ${GLFW_PATH}/include ${IMGUI_CLUB_PATH}/imgui_memory_editor)
 
 # Build the project
 add_executable(TRV-Emu src/main.cpp)

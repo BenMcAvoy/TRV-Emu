@@ -6,10 +6,12 @@
 // The Machine class will be responsible for loading the program into memory and starting the CPU.
 class Machine {
 private:
-    Memory memory;
     CPU cpu;
 
 public:
+    // NOTE: Only to be used for display purposes
+    Memory memory;
+
     Machine();
     ~Machine();
 
