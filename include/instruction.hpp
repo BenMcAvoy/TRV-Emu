@@ -9,7 +9,6 @@
 enum OpCode {
     // R FMT - ALU
     ADD   = 0b0110011,
-    ADD   = 0b0110011,
     XOR   = 0b0110011,
     OR    = 0b0110011,
     AND   = 0b0110011,
