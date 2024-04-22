@@ -9,12 +9,30 @@ static_assert(MEMORY_SIZE <= 4294967296, "Memory size must be less than or equal
 
 Memory::Memory() {
     memory = new uint8_t[MEMORY_SIZE];
+    memset(memory, 0x0, MEMORY_SIZE);
     LOG_INFO("Memory initializing");
 }
 
 Memory::~Memory() {
     LOG_INFO("Memory deinitalizing");
     delete[] memory;
+}
+
+// NOTE: 1 is returned if the address is out of bounds
+int Memory::loadBytes(uint32_t offset, uint8_t *bytes, size_t size) {
+    LOG_DEBUG("Loading %zu bytes into memory at 0x%08X", size, offset);
+
+    if (offset + (uint32_t)size > MEMORY_SIZE) {
+        LOG_ERROR("Memory load out of bounds: 0x%08X", offset);
+        return 1;
+    }
+
+    for (int i = 0; i < (int)size; i++)
+        this->write8(offset + i, bytes[i]);
+
+    LOG_DEBUG("Loaded %zu bytes into memory at 0x%08X", size, offset);
+
+    return 0;
 }
 
 // NOTE: 1 is returned if the address is out of bounds

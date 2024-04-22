@@ -1,7 +1,9 @@
 #include <inttypes.h>
 #include <sstream>
+#include <fstream>
 #include <string>
 #include <cstdio>
+#include <vector>
 
 #include "globals.cpp"
 #include "fonts.hpp"
@@ -21,7 +23,9 @@
 /* #include "cpu.cpp" */
 /* #include "memory.cpp" */
 
+// Function prototypes
 void drawLog();
+std::vector<uint8_t> loadExeFile(const std::string& filePath);
 
 bool showDebug = false;
 bool showInfo = false;
@@ -31,7 +35,12 @@ bool showError = true;
 static MemoryEditor mem_edit;
 
 uint32_t addr = 0x00000000;
-uint32_t value = 0x00000000;
+uint8_t value = 0x00;
+
+/*constexpr uint8_t helloWorld[] = {
+    0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x2C, 0x20, 0x57,
+    0x6F, 0x72, 0x6C, 0x64, 0x21, 0x00
+};*/
 
 int main(void) {
     GLFWwindow *window;
@@ -86,6 +95,15 @@ int main(void) {
 
     Machine machine;
 
+    // Load `.//Debug/TRV-Emu.exe` as a uint8_t array
+    #ifdef _WIN32
+    std::vector<uint8_t> program = loadExeFile(".\\TRV-Emu.exe");
+    #else
+    std::vector<uint8_t> program = loadExeFile("./TRV-Emu");
+    #endif
+
+    machine.memory.loadBytes(0x0, (uint8_t *)program.data(), program.size());
+
     /* cpu.memory.write32(0xFFFFFFFF, 0x12345678); */
     /* (void)cpu.memory.read32(0xFFFFFFFF); */
 
@@ -96,20 +114,20 @@ int main(void) {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        mem_edit.DrawWindow("Memory Editor", (void *)machine.memory.memory, sizeof(machine.memory.memory));
+        mem_edit.DrawWindow("Memory Editor", (void *)machine.memory.memory, MEMORY_SIZE);
 
         ImGui::Begin("Control");
         if (ImGui::Button("Step"))
             machine.step();
 
         ImGui::InputScalar("Address", ImGuiDataType_U32, &addr, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-        ImGui::InputScalar("Value", ImGuiDataType_U32, &value, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("Value", ImGuiDataType_U8, &value, 0, 0, "%02X", ImGuiInputTextFlags_CharsHexadecimal);
 
         if (ImGui::Button("Read"))
-            (void)machine.memory.read32(addr);
+            LOG_DEBUG("%02X", machine.memory.read8(addr));
 
         if (ImGui::Button("Write"))
-            machine.memory.write32(addr, value);
+            machine.memory.write8(addr, value);
 
         ImGui::End();
 
@@ -179,4 +197,22 @@ void drawLog() {
             }
         }
     }
+}
+
+std::vector<uint8_t> loadExeFile(const std::string& filePath) {
+    std::ifstream file(filePath, std::ios::binary | std::ios::ate); // Open file in binary mode and seek to the end
+    if (!file) {
+        LOG_ERROR("Failed to open file");
+        return std::vector<uint8_t>();
+    }
+
+    std::streamsize size = file.tellg(); // Get the size of the file
+    file.seekg(0, std::ios::beg); // Seek back to the beginning of the file
+
+    std::vector<uint8_t> buffer(size); // Allocate a buffer of the appropriate size
+    if (!file.read(reinterpret_cast<char*>(buffer.data()), size)) { // Read the file into the buffer
+        throw std::runtime_error("Failed to read file");
+    }
+
+    return buffer; // Return the buffer containing the file data
 }
