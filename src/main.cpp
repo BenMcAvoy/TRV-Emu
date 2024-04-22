@@ -107,7 +107,7 @@ int main(void) {
     /* cpu.memory.write32(0xFFFFFFFF, 0x12345678); */
     /* (void)cpu.memory.read32(0xFFFFFFFF); */
 
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(window) && !globals::shouldExit) {
         glfwPollEvents();
 
         ImGui_ImplOpenGL3_NewFrame();
@@ -128,6 +128,9 @@ int main(void) {
 
         if (ImGui::Button("Write"))
             machine.memory.write8(addr, value);
+
+        if (ImGui::Button("Exit"))
+            globals::shouldExit = true;
 
         ImGui::End();
 

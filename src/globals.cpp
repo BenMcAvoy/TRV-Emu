@@ -4,6 +4,7 @@
 #include <string>
 
 namespace globals {
+    bool shouldExit = false;
     std::string logContent = "";
 };
 
