@@ -74,12 +74,12 @@ jobs:
       if: startsWith(matrix.os, 'windows')
       uses: actions/upload-artifact@v4
       with:
-        name: TRV-Emu
+        name: TRV-Emu-${{ matrix.os }}-${{ matrix.build_type }}
         path: ${{ steps.strings.outputs.build-output-dir }}/Release/TRV-Emu.exe
 
     - name: Linux Upload
       if: startsWith(matrix.os, 'ubuntu')
       uses: actions/upload-artifact@v4
       with:
-        name: TRV-Emu
+        name: TRV-Emu-${{ matrix.os }}-${{ matrix.build_type }}
         path: ${{ steps.strings.outputs.build-output-dir }}/TRV-Emu
