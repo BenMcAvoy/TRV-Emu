@@ -34,6 +34,11 @@ jobs:
             c_compiler: cl
 
     steps:
+    - name: Cache setup
+      uses: actions/cache@v3
+      with:
+        path: build
+
     - name: Linux Setup
       if: startsWith(matrix.os, 'ubuntu')
       run: |
@@ -55,8 +60,6 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >
         cmake -B ${{ steps.strings.outputs.build-output-dir }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
@@ -66,9 +69,6 @@ jobs:
 
     - name: Build
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
-
-    # On Windows upload `$steps.strings.outputs.build-output-dir/Release/TRV-Emu.exe`
-    # On Linux upload `$steps.strings.outputs.build-output-dir/TRV-Emu`
 
     - name: Windows Upload
       if: startsWith(matrix.os, 'windows')
@@ -83,11 +83,3 @@ jobs:
       with:
         name: TRV-Emu
         path: ${{ steps.strings.outputs.build-output-dir }}/TRV-Emu
-
-    # - name: If we have a tag, create a release
-    #   if: startsWith(github.ref, 'refs/tags/')
-    #   uses: softprops/action-gh-release@v1
-    #   with:
-    #     files: ${{ steps.strings.outputs.build-output-dir }}/*
-    #     tag_name: ${{ github.ref }}
-    #     token: ${{ secrets.GITHUB_TOKEN }}
