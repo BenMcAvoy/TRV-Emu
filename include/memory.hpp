@@ -4,6 +4,11 @@
 #include <cstdint>
 
 // Memory class (32 bit)
+// This class will be used to store the memory of the machine.
+// This will be used to store the program and data memory.
+//
+// It can store up to 4GB of memory as no memory bank switching is implemented
+// and the 32 bit address space is all used up at that point.
 class Memory {
     public:
         Memory();

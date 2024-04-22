@@ -6,6 +6,7 @@
 // This will require research into how the RISC-V ISA works.
 
 // RISC-V 32I Base ISA opcodes
+// https://raw.githubusercontent.com/jameslzhu/riscv-card/master/riscv-card.pdf (unofficial)
 enum OpCode {
     // R FMT - ALU
     ADD   = 0b0110011,
@@ -50,8 +51,8 @@ enum OpCode {
     BGEU  = 0b1100011,
 
     // J/I FMT - Jump
-    JAL   = 0b1101111,
-    JALR  = 0b1100111,
+    JAL   = 0b1101111, // R
+    JALR  = 0b1100111, // I
 
     // U FMT - LUI/AUIPC
     LUI   = 0b0110111,
