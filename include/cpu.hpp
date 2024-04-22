@@ -3,16 +3,13 @@
 
 #include "memory.hpp"
 
-#include <cstdint>
-
 class CPU {
     public:
-        CPU();
+        CPU(Memory* memory);
         ~CPU();
 
-        Memory memory;
-
     private:
+        Memory* memory;
 };
 
 #endif

@@ -15,8 +15,9 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
-#include "cpu.cpp"
-#include "memory.cpp"
+#include "machine.cpp"
+/* #include "cpu.cpp" */
+/* #include "memory.cpp" */
 
 void drawLog();
 
@@ -76,12 +77,10 @@ int main(void) {
 
     LOG_INFO("ImGui initialized");
 
-    CPU cpu;
+    Machine machine;
 
-    LOG_INFO("Info example");
-    LOG_WARN("Warn example");
-    LOG_ERROR("Error example");
-    LOG_DEBUG("Debug example");
+    /* cpu.memory.write32(0xFFFFFFFF, 0x12345678); */
+    /* (void)cpu.memory.read32(0xFFFFFFFF); */
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -89,6 +88,11 @@ int main(void) {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        ImGui::Begin("Control");
+        if (ImGui::Button("Step"))
+            machine.step();
+        ImGui::End();
 
         ImGui::Begin("Log");
         ImGui::Checkbox("Debug", &showDebug);
