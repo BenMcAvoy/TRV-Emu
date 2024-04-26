@@ -2,10 +2,35 @@
 cmake_minimum_required(VERSION 3.5...3.19)
 project(TRV-Emu)
 
-# Lib paths
-set(IMGUI_PATH ${PROJECT_SOURCE_DIR}/libs/imgui)
-set(IMGUI_CLUB_PATH ${PROJECT_SOURCE_DIR}/libs/imgui_club)
-set(GLFW_PATH ${PROJECT_SOURCE_DIR}/libs/glfw)
+add_executable(TRV-Emu src/main.cpp)
+
+# Download dependencies with `FetchContent`
+include(FetchContent)
+find_package(OpenGL)
+FetchContent_Declare(glfw GIT_REPOSITORY https://github.com/glfw/glfw.git GIT_TAG master)
+FetchContent_MakeAvailable(glfw)
+
+FetchContent_Declare(
+        imgui
+        GIT_REPOSITORY https://github.com/ocornut/imgui.git
+        GIT_TAG docking
+)
+FetchContent_GetProperties(imgui)
+if (NOT imgui_POPULATED)
+    FetchContent_Populate(imgui)
+    set(IMGUI_INCLUDE_DIR ${imgui_SOURCE_DIR}/)
+    file(GLOB IMGUI_SOURCES ${imgui_SOURCE_DIR}/*.cpp)
+    file(GLOB IMGUI_HEADERS ${imgui_SOURCE_DIR}/*.h)
+    add_library(imgui STATIC ${IMGUI_SOURCES} ${IMGUI_SOURCES} ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp)
+    target_include_directories(imgui PUBLIC ${IMGUI_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${GLFW_INCLUDE_DIR})
+    target_link_libraries(imgui ${OPENGL_LIBRARIES} glfw)
+endif ()
+
+FetchContent_Declare(imgui_club GIT_REPOSITORY https://github.com/ocornut/imgui_club.git GIT_TAG main)
+FetchContent_makeAvailable(imgui_club)
+
+FetchContent_Declare(battery-embed GIT_REPOSITORY https://github.com/batterycenter/embed.git GIT_TAG main)
+FetchContent_MakeAvailable(battery-embed)
 
 # Build options
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -16,25 +41,14 @@ set(CMAKE_CXX_STANDARD 20)
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-add_subdirectory(${GLFW_PATH})
 
-# Configure ImGui
-file(GLOB IMGUI_SOURCES ${IMGUI_PATH}/*.cpp ${IMGUI_PATH}/backends/imgui_impl_glfw.cpp ${IMGUI_PATH}/backends/imgui_impl_opengl3.cpp)
-add_library(imgui STATIC ${IMGUI_SOURCES})
-target_include_directories(imgui PUBLIC ${IMGUI_PATH} ${GLFW_PATH}/include ${IMGUI_CLUB_PATH}/imgui_memory_editor)
-
-# Build the project
-add_executable(TRV-Emu src/main.cpp)
-
-# Link with GLFW and ImGui
-target_link_libraries(TRV-Emu glfw imgui)
+# Link with dependencies
+find_package(OpenGL REQUIRED)
+target_link_libraries(TRV-Emu PRIVATE glfw imgui OpenGL::GL)
 
 # Add include dir
-target_include_directories(TRV-Emu PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include ${PROJECT_SOURCE_DIR}/src)
-
-# Link with OpenGL
-find_package(OpenGL REQUIRED)
-target_link_libraries(TRV-Emu OpenGL::GL)
+#target_include_directories(TRV-Emu PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(TRV-Emu PRIVATE ${CMAKE_CURRENT_LIST_DIR}/include ${CMAKE_CURRENT_LIST_DIR}/src ${imgui_INCLUDE_DIRS} ${imgui_club_SOURCE_DIR}/imgui_memory_editor)
 
 if (UNIX)
 	# Enable all warnings and treat them as errors
