@@ -7,6 +7,7 @@
 
 #include "globals.cpp"
 #include "fonts.hpp"
+#include "imgui_internal.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -76,6 +77,7 @@ int main(void) {
     LOG_INFO("ImGui context created");
 
     ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     ImFontConfig config;
 	config.FontDataOwnedByAtlas = false;
 	io.Fonts->AddFontFromMemoryTTF(fonts::JetBrainsMonoNerdFont_Regular_ttf, sizeof(fonts::JetBrainsMonoNerdFont_Regular_ttf), 16.0f, &config, io.Fonts->GetGlyphRangesDefault());
@@ -103,6 +105,7 @@ int main(void) {
     #endif
 
     machine.memory.loadBytes(0x0, (uint8_t *)program.data(), program.size());
+    LOG_INFO("Program loaded");
 
     /* cpu.memory.write32(0xFFFFFFFF, 0x12345678); */
     /* (void)cpu.memory.read32(0xFFFFFFFF); */
@@ -113,6 +116,22 @@ int main(void) {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        // Create a dockspace
+        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+
+        if (ImGui::BeginMainMenuBar()) {
+            if (ImGui::BeginMenu("File")) {
+                if (ImGui::MenuItem("Quit")) {
+                    globals::shouldExit = true;
+                    break;
+                }
+
+                ImGui::EndMenu();
+            }
+
+            ImGui::EndMainMenuBar();
+        }
 
         mem_edit.DrawWindow("Memory Editor", (void *)machine.memory.memory, MEMORY_SIZE);
 
