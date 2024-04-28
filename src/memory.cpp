@@ -37,8 +37,6 @@ int Memory::loadBytes(uint32_t offset, uint8_t *bytes, size_t size) {
 
 // NOTE: 1 is returned if the address is out of bounds
 uint8_t Memory::write32(uint32_t address, uint32_t value) {
-    LOG_DEBUG("Writing 0x%08X to 0x%08X", value, address);
-
     if (address > (MEMORY_SIZE - 4)) {
         LOG_ERROR("Memory address wrote out of bounds: 0x%08X", address);
         return 1;
@@ -56,8 +54,6 @@ uint8_t Memory::write32(uint32_t address, uint32_t value) {
 
 // NOTE: 0 is returned if the address is out of bounds
 uint32_t Memory::read32(uint32_t address) {
-    LOG_DEBUG("Reading from 0x%08X", address);
-
     if (address > (MEMORY_SIZE - 4)) {
         LOG_ERROR("Memory address read out of bounds: 0x%08X", address);
         return 0;
