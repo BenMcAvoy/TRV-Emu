@@ -51,6 +51,41 @@ void CPU::fetch() {
 
 CPU::CPU(Memory* memory) {
     this->memory = memory;
+
+    this->zero = 0;
+    this->ra = 0;
+    this->sp = 0;
+    this->gp = 0;
+    this->tp = 0;
+    this->t0 = 0;
+    this->t1 = 0;
+    this->t2 = 0;
+    this->s0 = 0;
+    this->fp = 0;
+    this->s1 = 0;
+    this->a0 = 0;
+    this->a1 = 0;
+    this->a2 = 0;
+    this->a3 = 0;
+    this->a4 = 0;
+    this->a5 = 0;
+    this->a6 = 0;
+    this->a7 = 0;
+    this->s2 = 0;
+    this->s3 = 0;
+    this->s4 = 0;
+    this->s5 = 0;
+    this->s6 = 0;
+    this->s7 = 0;
+    this->s8 = 0;
+    this->s9 = 0;
+    this->s10 = 0;
+    this->s11 = 0;
+    this->t3 = 0;
+    this->t4 = 0;
+    this->t5 = 0;
+    this->t6 = 0;
+
     LOG_INFO("CPU initializing");
 }
 
