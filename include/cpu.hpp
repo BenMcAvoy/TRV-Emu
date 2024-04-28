@@ -18,9 +18,6 @@ class CPU {
 
         void fetch(); // Fetches the instruction from memory.
 
-    private:
-        Memory* memory;
-
         // Registers
         uint32_t x0  = 0; // Zero constant
         uint32_t x1  = 0; // Return address
@@ -91,6 +88,9 @@ class CPU {
 
         // User-visible registers
         uint32_t pc = 0; // Program counter
+
+    private:
+        Memory* memory;
 };
 
 #endif

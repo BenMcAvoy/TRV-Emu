@@ -12,6 +12,10 @@ Machine::~Machine() {
     LOG_INFO("Machine shutting down");
 }
 
+CPU *Machine::getCPU() {
+    return &m_cpu;
+}
+
 void Machine::step() {
     m_cpu.fetch();
 

@@ -16,4 +16,5 @@ public:
     ~Machine();
 
     void step();
+    CPU* getCPU();
 };
