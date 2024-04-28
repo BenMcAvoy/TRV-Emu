@@ -22,16 +22,16 @@ class CPU {
         Memory* memory;
 
         // Registers
-        uint32_t x0  = 0;  // Zero constant
-        uint32_t x1  = 0;  // Return address
-        uint32_t x2  = 0;  // Stack pointer
-        uint32_t x3  = 0;  // Global pointer
-        uint32_t x4  = 0;  // Thread pointer
-        uint32_t x5  = 0;  // Temporaries
-        uint32_t x6  = 0;  // Temporaries
-        uint32_t x7  = 0;  // Temporaries
-        uint32_t x8  = 0;  // Saved / Frame pointer
-        uint32_t x9  = 0;  // Saved register
+        uint32_t x0  = 0; // Zero constant
+        uint32_t x1  = 0; // Return address
+        uint32_t x2  = 0; // Stack pointer
+        uint32_t x3  = 0; // Global pointer
+        uint32_t x4  = 0; // Thread pointer
+        uint32_t x5  = 0; // Temporaries
+        uint32_t x6  = 0; // Temporaries
+        uint32_t x7  = 0; // Temporaries
+        uint32_t x8  = 0; // Saved / Frame pointer
+        uint32_t x9  = 0; // Saved register
         uint32_t x10 = 0; // Function arguments / Return values
         uint32_t x11 = 0; // Function arguments / Return values
         uint32_t x12 = 0; // Function arguments
