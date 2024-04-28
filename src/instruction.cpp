@@ -1,5 +1,5 @@
-#ifndef INSTRUCTION_CPP
-#define INSTRUCTION_CPP
+#include "../include/instruction.hpp"
+#include "../include/logging.hpp"
 
 #include <cstdint>
 
@@ -32,5 +32,3 @@ iFMT getFormat(uint32_t ins) {
             return R;
     }
 }
-
-#endif

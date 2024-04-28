@@ -103,7 +103,7 @@ int main(void) {
     machine.memory.loadBytes(0x0, (uint8_t *)program.data(), program.size());
     */
 
-    machine.memory.write32(0x0, 0b111110100000000000001100010011); // addi t1, zero, 1000
+    machine.memory.write32(0x0, 0b00111110100000000000001100010011); // addi t1, zero, 1000
 
     LOG_INFO("Program loaded");
 
@@ -207,7 +207,7 @@ void drawLog() {
 
         if (show) {
             if (isDebug) {
-                ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), "%s", to.c_str());
+                ImGui::TextColored(ImVec4(0.25f, 0.25f, 1.0f, 1.0f), "%s", to.c_str());
             } else if (isInfo) {
                 ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "%s", to.c_str());
             } else if (isError) {
