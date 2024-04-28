@@ -16,6 +16,8 @@ class CPU {
         CPU(Memory* memory);
         ~CPU();
 
+        void fetch(); // Fetches the instruction from memory.
+
     private:
         Memory* memory;
 

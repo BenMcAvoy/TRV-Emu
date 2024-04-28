@@ -4,7 +4,7 @@
 #include "memory.cpp"
 #include "cpu.cpp"
 
-Machine::Machine() : cpu(&memory) {
+Machine::Machine() : m_cpu(&memory) {
     LOG_INFO("Machine starting");
 }
 
@@ -13,5 +13,7 @@ Machine::~Machine() {
 }
 
 void Machine::step() {
-    LOG_WARN("Stepping machine is not implemented");
+    m_cpu.fetch();
+
+    //LOG_WARN("Stepping machine is not implemented");
 }

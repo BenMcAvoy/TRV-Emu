@@ -38,11 +38,6 @@ static MemoryEditor mem_edit;
 uint32_t addr = 0x00000000;
 uint8_t value = 0x00;
 
-/*constexpr uint8_t helloWorld[] = {
-    0x48, 0x65, 0x6C, 0x6C, 0x6F, 0x2C, 0x20, 0x57,
-    0x6F, 0x72, 0x6C, 0x64, 0x21, 0x00
-};*/
-
 int main(void) {
     GLFWwindow *window;
 
@@ -97,6 +92,7 @@ int main(void) {
 
     Machine machine;
 
+    /*
     // Load `.//Debug/TRV-Emu.exe` as a uint8_t array
     #ifdef _WIN32
     std::vector<uint8_t> program = loadExeFile(".\\TRV-Emu.exe");
@@ -105,6 +101,10 @@ int main(void) {
     #endif
 
     machine.memory.loadBytes(0x0, (uint8_t *)program.data(), program.size());
+    */
+
+    machine.memory.write32(0x0, 0b111110100000000000001100010011); // addi t1, zero, 1000
+
     LOG_INFO("Program loaded");
 
     /* cpu.memory.write32(0xFFFFFFFF, 0x12345678); */
