@@ -29,8 +29,9 @@ endif ()
 FetchContent_Declare(imgui_club GIT_REPOSITORY https://github.com/ocornut/imgui_club.git GIT_TAG main)
 FetchContent_makeAvailable(imgui_club)
 
-FetchContent_Declare(battery-embed GIT_REPOSITORY https://github.com/batterycenter/embed.git GIT_TAG main)
-FetchContent_MakeAvailable(battery-embed)
+# We are not going to be using battery-embed for now
+# FetchContent_Declare(battery-embed GIT_REPOSITORY https://github.com/batterycenter/embed.git GIT_TAG main)
+# FetchContent_MakeAvailable(battery-embed)
 
 # Build options
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
