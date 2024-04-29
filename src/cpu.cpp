@@ -5,6 +5,13 @@
 
 #include <bitset>
 
+inline static uint32_t extractBits(uint32_t *ins, int amount) {
+    uint32_t mask = (1 << amount) - 1;
+    uint32_t value = *ins & mask;
+    *ins >>= amount;
+    return value;
+}
+
 // TODO: Move decoding to separate function
 void CPU::fetch() {
     // Fetch the instruction from memory
@@ -18,11 +25,16 @@ void CPU::fetch() {
             break;
         case I:
             { // Scope for variables to allow stack allocation in a switch statement
-            uint32_t opcode = ins & 0x7F; ins >>= 7;
-            uint32_t rd = ins & 0x1F; ins >>= 5;
-            uint32_t funct3 = ins & 0x3; ins >>= 3;
-            uint32_t rs1 = ins & 0x5; ins >>= 5;
-            uint32_t imm = ins;
+            uint32_t opcode = extractBits(&ins, 7);
+            uint32_t rd = extractBits(&ins, 5);
+            uint32_t funct3 = extractBits(&ins, 3);
+            uint32_t rs1 = extractBits(&ins, 5);
+            uint32_t imm = extractBits(&ins, 12);
+
+            /* uint32_t rd = ins & 0x1F; ins >>= 5; */
+            /* uint32_t funct3 = ins & 0x3; ins >>= 3; */
+            /* uint32_t rs1 = ins & 0x5; ins >>= 5; */
+            /* uint32_t imm = ins; */
 
             LOG_DEBUG("Instruction (%s): %s %02X %02X %02X %d",
                 "I", std::bitset<7>(opcode).to_string().c_str(),
