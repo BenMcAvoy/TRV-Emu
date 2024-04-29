@@ -19,6 +19,32 @@ Memory::~Memory() {
 }
 
 // NOTE: 1 is returned if the address is out of bounds
+int Memory::loadDwords(uint32_t offset, uint32_t *dwords, size_t size) {
+    LOG_DEBUG("Loading %zu dwords into memory at 0x%08X", size, offset);
+
+    if (offset + (uint32_t)size > MEMORY_SIZE) {
+        LOG_ERROR("Memory load out of bounds: 0x%08X", offset);
+        return 1;
+    }
+
+    for (int i = 0; i < (int)size; i++) {
+        uint8_t a = (dwords[i] >> 0) & 0xFF;
+        uint8_t b = (dwords[i] >> 8) & 0xFF;
+        uint8_t c = (dwords[i] >> 16) & 0xFF;
+        uint8_t d = (dwords[i] >> 24) & 0xFF;
+
+        this->write8(offset + (i * 4) + 0, a);
+        this->write8(offset + (i * 4) + 1, b);
+        this->write8(offset + (i * 4) + 2, c);
+        this->write8(offset + (i * 4) + 3, d);
+    }
+
+    LOG_DEBUG("Loaded %zu dwords into memory at 0x%08X", size, offset);
+
+    return 0;
+}
+
+// NOTE: 1 is returned if the address is out of bounds
 int Memory::loadBytes(uint32_t offset, uint8_t *bytes, size_t size) {
     LOG_DEBUG("Loading %zu bytes into memory at 0x%08X", size, offset);
 

@@ -15,6 +15,7 @@ class Memory {
         ~Memory();
 
         int loadBytes(uint32_t offset, uint8_t *bytes, std::size_t size);
+        int loadDwords(uint32_t offset, uint32_t *dword, std::size_t size);
 
         uint8_t write32(uint32_t address, uint32_t value);
         uint32_t read32(uint32_t address);
