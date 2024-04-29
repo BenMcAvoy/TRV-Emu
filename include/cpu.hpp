@@ -17,6 +17,7 @@ class CPU {
         ~CPU();
 
         void fetch(); // Fetches the instruction from memory.
+        void decode(uint32_t ins); // Decodes the instruction.
 
         // Registers
         uint32_t x0  = 0; // Zero constant

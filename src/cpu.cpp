@@ -12,10 +12,7 @@ inline static uint32_t extractBits(uint32_t *ins, int amount) {
     return value;
 }
 
-// TODO: Move decoding to separate function
-void CPU::fetch() {
-    // Fetch the instruction from memory
-    uint32_t ins = this->memory->read32(this->pc);
+void CPU::decode(uint32_t ins) {
     iFMT fmt = getFormat(ins);
 
     // Print the format
@@ -29,11 +26,50 @@ void CPU::fetch() {
             uint32_t rs2 = extractBits(&ins, 5);
             uint32_t funct7 = extractBits(&ins, 7);
 
+            // Combination: funct7 | funct3
+            uint32_t funct = (funct7 << 3) | funct3;
+
             LOG_DEBUG("Instruction (%s): %s %02X %02X %02X %02X %02X",
                 "R", std::bitset<7>(opcode).to_string().c_str(),
                 rd, funct3, rs1, rs2, funct7
             );
+
+            switch (funct) {
+                case 0x0: // 0x0 0x0
+                    LOG_DEBUG("ADD");
+                    break;
+                case (0x20 << 3): // 0x20 0x0
+                    LOG_DEBUG("SUB");
+                    break;
+                case 0x4: // 0x0 0x4
+                    LOG_DEBUG("XOR");
+                    break;
+                case 0x6: // 0x0 0x6
+                    LOG_DEBUG("OR");
+                    break;
+                case 0x7: // 0x0 0x7
+                    LOG_DEBUG("AND");
+                    break;
+                case 0x1: // 0x0 0x1
+                    LOG_DEBUG("SLL");
+                    break;
+                case 0x5: // 0x0 0x5
+                    LOG_DEBUG("SRL");
+                    break;
+                case (0x20 << 3) | 0x5: // 0x20 0x5
+                    LOG_DEBUG("SRA");
+                    break;
+                case 0x2: // 0x0 0x2
+                    LOG_DEBUG("SLT");
+                    break;
+                case 0x3: // 0x0 0x3
+                    LOG_DEBUG("SLTU");
+                    break;
+                default:
+                    LOG_WARN("Unknown instruction with funct %02X", funct);
             }
+
+            } // End of scope for variables
 
             break;
         case I:
@@ -48,22 +84,96 @@ void CPU::fetch() {
                 "I", std::bitset<7>(opcode).to_string().c_str(),
                 rd, funct3, rs1, imm
             );
+
+            uint32_t imm_breakout = imm & 0xFE; // Get [5:11] bits
+
+            if (opcode == 0b00000011) {
+                switch (funct3) {
+                    case 0x0:
+                        LOG_DEBUG("LB");
+                        break;
+                    case 0x1:
+                        LOG_DEBUG("LH");
+                        break;
+                    case 0x2:
+                        LOG_DEBUG("LW");
+                        break;
+                    case 0x4:
+                        LOG_DEBUG("LBU");
+                        break;
+                    case 0x5:
+                        LOG_DEBUG("LHU");
+                        break;
+                }
+
+                return;
             }
 
-            break;
-        case S:
-            LOG_WARN("Instruction format S not implemented");
-            break;
-        case B:
-            LOG_WARN("Instruction format B not implemented");
-            break;
-        case U:
-            LOG_WARN("Instruction format U not implemented");
-            break;
-        case J:
-            LOG_WARN("Instruction format J not implemented");
-            break;
+            if (opcode == 0b01100011 && funct3 == 0x0) {
+                LOG_DEBUG("LW");
+                return;
+            }
+
+            if (opcode == 0b01110011) {
+                switch (funct3) {
+                    case 0x0:
+                        LOG_DEBUG("FLW");
+                        break;
+                    case 0x1:
+                        LOG_DEBUG("FLD");
+                        break;
+                    default:
+                        LOG_WARN("Unknown instruction with funct3 %02X", funct3);
+                }
+
+                return;
+            }
+
+            switch (funct3) {
+                case 0x0: // 0x0
+                    LOG_DEBUG("ADDI");
+                    break;
+                case 0x4: // 0x4
+                    LOG_DEBUG("XORI");
+                    break;
+                case 0x6: // 0x6
+                    LOG_DEBUG("ORI");
+                    break;
+                case 0x7: // 0x7
+                    LOG_DEBUG("ANDI");
+                    break;
+                case 0x1: // 0x1
+                    if (imm_breakout == 0x0)
+                        LOG_DEBUG("SLLI");
+
+                    break;
+                case 0x5: // 0x5
+                    if (imm_breakout == 0x0)
+                        LOG_DEBUG("SRLI");
+
+                    if (imm_breakout == 0x20)
+                        LOG_DEBUG("SRAI");
+
+                    break;
+                case 0x2: // 0x2
+                    LOG_DEBUG("SLTI");
+                    break;
+                case 0x3: // 0x3
+                    LOG_DEBUG("SLTIU");
+                    break;
+                default:
+                    LOG_WARN("Unknown instruction with funct3 %02X", funct3);
+            }
+
+            } // End of scope for variables
     }
+}
+
+// TODO: Move decoding to separate function
+void CPU::fetch() {
+    // Fetch the instruction from memory
+    uint32_t ins = this->memory->read32(this->pc);
+    this->decode(ins);
 
     // Increment the program counter
     this->pc += 4;
