@@ -5,6 +5,7 @@
 
 #include <bitset>
 
+// TODO: Move decoding to separate function
 void CPU::fetch() {
     // Fetch the instruction from memory
     uint32_t ins = this->memory->read32(this->pc);
