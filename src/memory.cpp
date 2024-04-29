@@ -3,7 +3,7 @@
 #include "../include/memory.hpp"
 #include "../include/logging.hpp"
 
-constexpr uint32_t MEMORY_SIZE = 0xFFFFFFFF;
+constexpr uint32_t MEMORY_SIZE = 0xFFFF;
 static_assert(MEMORY_SIZE > 0, "Memory size must be greater than 0");
 static_assert(MEMORY_SIZE <= 4294967296, "Memory size must be less than or equal to the 32-bit max value");
 
