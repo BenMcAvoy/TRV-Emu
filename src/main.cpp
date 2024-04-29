@@ -104,9 +104,9 @@ int main(void) {
     */
 
     std::vector<uint32_t> program = {
-        0x00100293,
-        0x00200313,
-        0x006283b3,
+        0x00500293, // addi t0, zero, 5
+        0x00300313, // addi t1, zero, 3
+        0x406283b3, // sub t2, t0, t1
     };
 
     machine.memory.loadDwords(0x0, program.data(), program.size());
