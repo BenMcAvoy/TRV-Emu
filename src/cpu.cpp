@@ -21,7 +21,20 @@ void CPU::fetch() {
     // Print the format
     switch (fmt) {
         case R:
-            LOG_WARN("Instruction format R not implemented");
+            { // Scope for variables to allow stack allocation in a switch statement
+            uint32_t opcode = extractBits(&ins, 7);
+            uint32_t rd = extractBits(&ins, 5);
+            uint32_t funct3 = extractBits(&ins, 3);
+            uint32_t rs1 = extractBits(&ins, 5);
+            uint32_t rs2 = extractBits(&ins, 5);
+            uint32_t funct7 = extractBits(&ins, 7);
+
+            LOG_DEBUG("Instruction (%s): %s %02X %02X %02X %02X %02X",
+                "R", std::bitset<7>(opcode).to_string().c_str(),
+                rd, funct3, rs1, rs2, funct7
+            );
+            }
+
             break;
         case I:
             { // Scope for variables to allow stack allocation in a switch statement
@@ -31,16 +44,10 @@ void CPU::fetch() {
             uint32_t rs1 = extractBits(&ins, 5);
             uint32_t imm = extractBits(&ins, 12);
 
-            /* uint32_t rd = ins & 0x1F; ins >>= 5; */
-            /* uint32_t funct3 = ins & 0x3; ins >>= 3; */
-            /* uint32_t rs1 = ins & 0x5; ins >>= 5; */
-            /* uint32_t imm = ins; */
-
             LOG_DEBUG("Instruction (%s): %s %02X %02X %02X %d",
                 "I", std::bitset<7>(opcode).to_string().c_str(),
                 rd, funct3, rs1, imm
             );
-
             }
 
             break;

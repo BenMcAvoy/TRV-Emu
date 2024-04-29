@@ -103,7 +103,15 @@ int main(void) {
     machine.memory.loadBytes(0x0, (uint8_t *)program.data(), program.size());
     */
 
-    machine.memory.write32(0x0, 0b00111110100000000000001100010011); // addi t1, zero, 1000
+    std::vector<uint32_t> program = {
+        0x00100293,
+        0x00200313,
+        0x006283b3,
+    };
+
+    machine.memory.loadDwords(0x0, program.data(), program.size());
+    /* machine.memory.loadBytes(0x0, (uint8_t *)program.data(), program.size()); */
+    /* machine.memory.write32(0x0, 0b00111110100000000000001100010011); // addi t1, zero, 1000 */
 
     LOG_INFO("Program loaded");
 
