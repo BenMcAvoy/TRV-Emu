@@ -166,6 +166,9 @@ void CPU::decode(uint32_t ins) {
             }
 
             } // End of scope for variables
+            break;
+        default:
+            LOG_WARN("Unimplemented instruction format %d", fmt);
     }
 }
 
