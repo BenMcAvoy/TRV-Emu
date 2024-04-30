@@ -14,11 +14,10 @@ COMMENTS=$(echo "$OUTPUT" | cut -d "	" -f 3-)
 
 echo "const uint32_t program[] = {" | tee output.txt
 
-for line in $ASM; do
+for index in $(seq 1 "$(echo "$ASM" | wc -l)"); do
+    line=$(echo "$ASM" | head -n "$index" | tail -n 1)
+    comment=$(echo "$COMMENTS" | head -n "$index" | tail -n 1 | tr '\t' ' ' | sed 's/,/, /g')
     asm=$(echo "$line" | tr -d '[:space:]')
-
-    # Get comment and also replace tabs with spaces and also add a space after commas
-    comment=$(echo "$COMMENTS" | head -n 1 | tr '\t' ' ' | sed 's/,/, /g')
 
     echo "    0x$asm,    // $comment" | tee -a output.txt
 done
