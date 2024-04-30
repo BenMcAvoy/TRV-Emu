@@ -3,26 +3,20 @@
 #include "../include/memory.hpp"
 #include "../include/logging.hpp"
 
-constexpr uint32_t MEMORY_SIZE = 0xFFFF;
-static_assert(MEMORY_SIZE > 0, "Memory size must be greater than 0");
-static_assert(MEMORY_SIZE <= 4294967296, "Memory size must be less than or equal to the 32-bit max value");
-
 Memory::Memory() {
-    memory = new uint8_t[MEMORY_SIZE];
-    memset(memory, 0x0, MEMORY_SIZE);
+    memset(m_memory, 0x0, MEMORY_BYTES);
     LOG_INFO("Memory initializing");
 }
 
 Memory::~Memory() {
     LOG_INFO("Memory deinitalizing");
-    delete[] memory;
 }
 
 // NOTE: 1 is returned if the address is out of bounds
 int Memory::loadDwords(uint32_t offset, uint32_t *dwords, size_t size) {
     LOG_DEBUG("Loading %zu dwords into memory at 0x%08X", size, offset);
 
-    if (offset + (uint32_t)size > MEMORY_SIZE) {
+    if (offset + (uint32_t)size > MEMORY_BYTES) {
         LOG_ERROR("Memory load out of bounds: 0x%08X", offset);
         return 1;
     }
@@ -48,7 +42,7 @@ int Memory::loadDwords(uint32_t offset, uint32_t *dwords, size_t size) {
 int Memory::loadBytes(uint32_t offset, uint8_t *bytes, size_t size) {
     LOG_DEBUG("Loading %zu bytes into memory at 0x%08X", size, offset);
 
-    if (offset + (uint32_t)size > MEMORY_SIZE) {
+    if (offset + (uint32_t)size > MEMORY_BYTES) {
         LOG_ERROR("Memory load out of bounds: 0x%08X", offset);
         return 1;
     }
@@ -63,7 +57,7 @@ int Memory::loadBytes(uint32_t offset, uint8_t *bytes, size_t size) {
 
 // NOTE: 1 is returned if the address is out of bounds
 uint8_t Memory::write32(uint32_t address, uint32_t value) {
-    if (address > (MEMORY_SIZE - 4)) {
+    if (address > (MEMORY_BYTES - 4)) {
         LOG_ERROR("Memory address wrote out of bounds: 0x%08X", address);
         return 1;
     }
@@ -80,7 +74,7 @@ uint8_t Memory::write32(uint32_t address, uint32_t value) {
 
 // NOTE: 0 is returned if the address is out of bounds
 uint32_t Memory::read32(uint32_t address) {
-    if (address > (MEMORY_SIZE - 4)) {
+    if (address > (MEMORY_BYTES - 4)) {
         LOG_ERROR("Memory address read out of bounds: 0x%08X", address);
         return 0;
     }
@@ -96,10 +90,14 @@ uint32_t Memory::read32(uint32_t address) {
     return value;
 }
 
+uint8_t *Memory::getMemory() {
+    return m_memory;
+}
+
 void Memory::write8(uint32_t address, uint8_t value) {
-    memory[address] = value;
+    m_memory[address] = value;
 }
 
 uint8_t Memory::read8(uint32_t address) {
-    return memory[address];
+    return m_memory[address];
 }

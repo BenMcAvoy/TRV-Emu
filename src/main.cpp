@@ -141,7 +141,7 @@ int main(void) {
             ImGui::EndMainMenuBar();
         }
 
-        mem_edit.DrawWindow("Memory Editor", (void *)machine.memory.memory, MEMORY_SIZE);
+        mem_edit.DrawWindow("Memory Editor", (void *)machine.memory.getMemory(), MEMORY_BYTES);
 
         ImGui::Begin("Control");
         if (ImGui::Button("Step"))

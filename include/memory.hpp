@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+const uint32_t MEMORY_BYTES = 1000 * 1000; // 1MB of memory
+
 // Memory class (32 bit)
 // This class will be used to store the memory of the machine.
 // This will be used to store the program and data memory.
@@ -20,11 +22,13 @@ class Memory {
         uint8_t write32(uint32_t address, uint32_t value);
         uint32_t read32(uint32_t address);
 
-        // NOTE: Only to be used for display purposes
-        uint8_t *memory;
-
         void write8(uint32_t address, uint8_t value);
         uint8_t read8(uint32_t address);
+
+        uint8_t *getMemory();
+
+    private:
+        uint8_t m_memory[MEMORY_BYTES];
 };
 
 #endif
