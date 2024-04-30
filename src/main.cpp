@@ -38,6 +38,10 @@ int main(void) {
     if (!window) {
         glfwTerminate();
         LOG_ERROR("Failed to create window");
+        const char *description;
+        int code = glfwGetError(&description);
+        LOG_ERROR("Error code: %d, Description: %s", code, description);
+
         return -1;
     }
 
