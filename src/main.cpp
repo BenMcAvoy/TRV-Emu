@@ -90,6 +90,11 @@ int main(void) {
     machine.memory.loadDwords(0x0, (uint32_t*)program, sizeof(program));
     LOG_INFO("Program loaded");
 
+    // Disable logging to terminal after we have shown initialisation messages
+    // as they are the ones that are necessary to see if the program is not
+    // opening the window, the rest can be seen in the ImGui window.
+    globals::logToTerm = false;
+
     while (!glfwWindowShouldClose(window) && !globals::shouldExit) {
         glfwPollEvents();
 
