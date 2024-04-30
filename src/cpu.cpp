@@ -117,10 +117,10 @@ void CPU::decode(uint32_t ins) {
             if (opcode == 0b01110011) {
                 switch (funct3) {
                     case 0x0:
-                        LOG_DEBUG("FLW");
+                        LOG_DEBUG("ECALL");
                         break;
                     case 0x1:
-                        LOG_DEBUG("FLD");
+                        LOG_DEBUG("EBREAK");
                         break;
                     default:
                         LOG_WARN("Unknown instruction with funct3 %02X", funct3);
