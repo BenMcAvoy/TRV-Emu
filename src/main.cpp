@@ -23,6 +23,10 @@ bool showInfo  = true;
 bool showWarn  = true;
 bool showError = true;
 
+bool clockEnabled = false;
+float clockInterval = 1.0f;
+float timeSinceLastStep = 0.0f;
+
 static MemoryEditor mem_edit;
 
 uint32_t addr = 0x00000000;
@@ -94,6 +98,8 @@ int main(void) {
     while (!glfwWindowShouldClose(window) && !globals::shouldExit) {
         glfwPollEvents();
 
+        timeSinceLastStep += io.DeltaTime;
+
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -117,6 +123,16 @@ int main(void) {
         mem_edit.DrawWindow("Memory Editor", (void *)machine.memory.getMemory(), MEMORY_BYTES);
 
         ImGui::Begin("Control");
+        ImGui::Checkbox("Clock enabled", &clockEnabled);
+
+        if (clockEnabled) {
+            ImGui::InputFloat("Interval", &clockInterval, 0.1f, 1.0f, "%.1f");
+            if (timeSinceLastStep >= clockInterval) {
+                machine.step();
+                timeSinceLastStep = 0.0f;
+            }
+        }
+
         if (ImGui::Button("Step"))
             machine.step();
 
@@ -136,12 +152,20 @@ int main(void) {
 
         ImGui::Begin("Log");
         ImGui::Checkbox("Debug", &showDebug);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("Show debug messages");
         ImGui::SameLine();
         ImGui::Checkbox("Info", &showInfo);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("Show info messages");
         ImGui::SameLine();
         ImGui::Checkbox("Warn", &showWarn);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("Show warning messages");
         ImGui::SameLine();
         ImGui::Checkbox("Error", &showError);
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("Show error messages");
         ImGui::Separator();
 
         drawLog(&showDebug, &showInfo, &showWarn, &showError);

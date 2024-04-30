@@ -3,45 +3,59 @@
 #include "cpu.hpp"
 #include "imgui.h"
 
+static void drawRegister(uint32_t* reg, const char* name, const char* tooltip, bool readOnly = false) {
+    if (readOnly) {
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+        ImGui::InputScalar(name, ImGuiDataType_U32, reg, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_ReadOnly);
+        ImGui::PopStyleColor();
+    } else {
+        ImGui::InputScalar(name, ImGuiDataType_U32, reg, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+    }
+
+    if (tooltip) {
+        if (ImGui::IsItemHovered()) {
+            ImGui::BeginTooltip();
+            ImGui::Text("%s", tooltip);
+            ImGui::EndTooltip();
+        }
+    }
+}
+
 void drawRegisters(CPU* cpu) {
-    ImGui::InputScalar("PC", ImGuiDataType_U32, &cpu->pc, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+    drawRegister(&cpu->pc, "PC", "Program counter");
 
-    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
-    ImGui::InputScalar("Zero", ImGuiDataType_U32, &cpu->x0, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_ReadOnly);
-    ImGui::PopStyleColor();
-
-    ImGui::InputScalar("RA", ImGuiDataType_U32, &cpu->x1, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("SP", ImGuiDataType_U32, &cpu->x2, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("GP", ImGuiDataType_U32, &cpu->x3, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("TP", ImGuiDataType_U32, &cpu->x4, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("RA", ImGuiDataType_U32, &cpu->x5, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("T0", ImGuiDataType_U32, &cpu->x6, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("T1", ImGuiDataType_U32, &cpu->x7, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("T2", ImGuiDataType_U32, &cpu->x8, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("S0/FP", ImGuiDataType_U32, &cpu->x9, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("A0", ImGuiDataType_U32, &cpu->x10, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("A1", ImGuiDataType_U32, &cpu->x11, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("A2", ImGuiDataType_U32, &cpu->x12, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("A3", ImGuiDataType_U32, &cpu->x13, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("A4", ImGuiDataType_U32, &cpu->x14, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("A5", ImGuiDataType_U32, &cpu->x15, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("A6", ImGuiDataType_U32, &cpu->x16, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("A7", ImGuiDataType_U32, &cpu->x17, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("S1", ImGuiDataType_U32, &cpu->x18, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("S2", ImGuiDataType_U32, &cpu->x19, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("S3", ImGuiDataType_U32, &cpu->x20, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("S4", ImGuiDataType_U32, &cpu->x21, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("S5", ImGuiDataType_U32, &cpu->x22, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("S6", ImGuiDataType_U32, &cpu->x23, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("S7", ImGuiDataType_U32, &cpu->x24, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("S8", ImGuiDataType_U32, &cpu->x25, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("S9", ImGuiDataType_U32, &cpu->x26, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("S10", ImGuiDataType_U32, &cpu->x27, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("S11", ImGuiDataType_U32, &cpu->x28, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("T3", ImGuiDataType_U32, &cpu->x29, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("T4", ImGuiDataType_U32, &cpu->x30, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("T5", ImGuiDataType_U32, &cpu->x31, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
-    ImGui::InputScalar("T6", ImGuiDataType_U32, &cpu->x31, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+    drawRegister(&cpu->x0, "Zero", "Hard-wired zero", true);
+    drawRegister(&cpu->x1, "RA", "Return address");
+    drawRegister(&cpu->x2, "SP", "Stack pointer");
+    drawRegister(&cpu->x3, "GP", "Global pointer");
+    drawRegister(&cpu->x4, "TP", "Thread pointer");
+    drawRegister(&cpu->x5, "T0", "Temporary/alternate link register");
+    drawRegister(&cpu->x6, "T1", "Temporary");
+    drawRegister(&cpu->x7, "T2", "Temporary");
+    drawRegister(&cpu->x8, "S0/FP", "Saved register/frame pointer");
+    drawRegister(&cpu->x9, "A0", "Function argument/return value");
+    drawRegister(&cpu->x10, "A1", "Function argument/return value");
+    drawRegister(&cpu->x11, "A2", "Function argument/return value");
+    drawRegister(&cpu->x12, "A3", "Function argument/return value");
+    drawRegister(&cpu->x13, "A4", "Function argument");
+    drawRegister(&cpu->x14, "A5", "Function argument");
+    drawRegister(&cpu->x15, "A6", "Function argument");
+    drawRegister(&cpu->x16, "A7", "Function argument");
+    drawRegister(&cpu->x17, "S1", "Saved register");
+    drawRegister(&cpu->x18, "S2", "Saved register");
+    drawRegister(&cpu->x19, "S3", "Saved register");
+    drawRegister(&cpu->x20, "S4", "Saved register");
+    drawRegister(&cpu->x21, "S5", "Saved register");
+    drawRegister(&cpu->x22, "S6", "Saved register");
+    drawRegister(&cpu->x23, "S7", "Saved register");
+    drawRegister(&cpu->x24, "S8", "Saved register");
+    drawRegister(&cpu->x25, "S9", "Saved register");
+    drawRegister(&cpu->x26, "S10", "Saved register");
+    drawRegister(&cpu->x27, "S11", "Saved register");
+    drawRegister(&cpu->x28, "T3", "Temporary");
+    drawRegister(&cpu->x29, "T4", "Temporary");
+    drawRegister(&cpu->x30, "T5", "Temporary");
+    drawRegister(&cpu->x31, "T6", "Temporary");
 }
 
 void drawLog(bool *showDebug, bool *showInfo, bool *showWarn, bool *showError) {
