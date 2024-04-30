@@ -103,13 +103,18 @@ int main(void) {
     machine.memory.loadBytes(0x0, (uint8_t *)program.data(), program.size());
     */
 
-    std::vector<uint32_t> program = {
-        0x00500293, // addi t0, zero, 5
-        0x00300313, // addi t1, zero, 3
-        0x406283b3, // sub t2, t0, t1
+    const uint32_t program[] = {
+        0x00400293,    // li t0, 4
+        0x0012f313,    // li t0, 4
     };
 
-    machine.memory.loadDwords(0x0, program.data(), program.size());
+    /* std::vector<uint32_t> program = { */
+    /*     0x00500293, // addi t0, zero, 5 */
+    /*     0x00300313, // addi t1, zero, 3 */
+    /*     0x406283b3, // sub t2, t0, t1 */
+    /* }; */
+
+    machine.memory.loadDwords(0x0, (uint32_t*)program, sizeof(program));
     /* machine.memory.loadBytes(0x0, (uint8_t *)program.data(), program.size()); */
     /* machine.memory.write32(0x0, 0b00111110100000000000001100010011); // addi t1, zero, 1000 */
 
@@ -177,40 +182,41 @@ int main(void) {
         ImGui::Begin("Registers");
         CPU *cpu = machine.getCPU();
 
-        ImGui::Text("PC    : %08X", cpu->pc);
-        ImGui::Text("Zero  : %08X", cpu->x0);
-        ImGui::Text("RA    : %08X", cpu->x1);
-        ImGui::Text("SP    : %08X", cpu->x2);
-        ImGui::Text("GP    : %08X", cpu->x3);
-        ImGui::Text("TP    : %08X", cpu->x4);
-        ImGui::Text("RA    : %08X", cpu->x5);
-        ImGui::Text("T0    : %08X", cpu->x6);
-        ImGui::Text("T1    : %08X", cpu->x7);
-        ImGui::Text("T2    : %08X", cpu->x8);
-        ImGui::Text("S0/FP : %08X", cpu->x9);
-        ImGui::Text("A0    : %08X", cpu->x10);
-        ImGui::Text("A1    : %08X", cpu->x11);
-        ImGui::Text("A2    : %08X", cpu->x12);
-        ImGui::Text("A3    : %08X", cpu->x13);
-        ImGui::Text("A4    : %08X", cpu->x14);
-        ImGui::Text("A5    : %08X", cpu->x15);
-        ImGui::Text("A6    : %08X", cpu->x16);
-        ImGui::Text("A7    : %08X", cpu->x17);
-        ImGui::Text("S1    : %08X", cpu->x18);
-        ImGui::Text("S2    : %08X", cpu->x19);
-        ImGui::Text("S3    : %08X", cpu->x20);
-        ImGui::Text("S4    : %08X", cpu->x21);
-        ImGui::Text("S5    : %08X", cpu->x22);
-        ImGui::Text("S6    : %08X", cpu->x23);
-        ImGui::Text("S7    : %08X", cpu->x24);
-        ImGui::Text("S8    : %08X", cpu->x25);
-        ImGui::Text("S9    : %08X", cpu->x26);
-        ImGui::Text("S10   : %08X", cpu->x27);
-        ImGui::Text("S11   : %08X", cpu->x28);
-        ImGui::Text("T3    : %08X", cpu->x29);
-        ImGui::Text("T4    : %08X", cpu->x30);
-        ImGui::Text("T5    : %08X", cpu->x31);
-        ImGui::Text("T6    : %08X", cpu->x31);
+        // Bi-directional input (show value and allow editing)
+        ImGui::InputScalar("PC", ImGuiDataType_U32, &cpu->pc, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("Zero ", ImGuiDataType_U32, &cpu->x0, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_ReadOnly);
+        ImGui::InputScalar("RA   ", ImGuiDataType_U32, &cpu->x1, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("SP   ", ImGuiDataType_U32, &cpu->x2, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("GP   ", ImGuiDataType_U32, &cpu->x3, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("TP   ", ImGuiDataType_U32, &cpu->x4, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("RA   ", ImGuiDataType_U32, &cpu->x5, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("T0   ", ImGuiDataType_U32, &cpu->x6, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("T1   ", ImGuiDataType_U32, &cpu->x7, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("T2   ", ImGuiDataType_U32, &cpu->x8, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("S0/FP", ImGuiDataType_U32, &cpu->x9, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("A0   ", ImGuiDataType_U32, &cpu->x10, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("A1   ", ImGuiDataType_U32, &cpu->x11, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("A2   ", ImGuiDataType_U32, &cpu->x12, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("A3   ", ImGuiDataType_U32, &cpu->x13, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("A4   ", ImGuiDataType_U32, &cpu->x14, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("A5   ", ImGuiDataType_U32, &cpu->x15, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("A6   ", ImGuiDataType_U32, &cpu->x16, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("A7   ", ImGuiDataType_U32, &cpu->x17, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("S1   ", ImGuiDataType_U32, &cpu->x18, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("S2   ", ImGuiDataType_U32, &cpu->x19, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("S3   ", ImGuiDataType_U32, &cpu->x20, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("S4   ", ImGuiDataType_U32, &cpu->x21, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("S5   ", ImGuiDataType_U32, &cpu->x22, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("S6   ", ImGuiDataType_U32, &cpu->x23, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("S7   ", ImGuiDataType_U32, &cpu->x24, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("S8   ", ImGuiDataType_U32, &cpu->x25, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("S9   ", ImGuiDataType_U32, &cpu->x26, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("S10  ", ImGuiDataType_U32, &cpu->x27, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("S11  ", ImGuiDataType_U32, &cpu->x28, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("T3   ", ImGuiDataType_U32, &cpu->x29, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("T4   ", ImGuiDataType_U32, &cpu->x30, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("T5   ", ImGuiDataType_U32, &cpu->x31, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
+        ImGui::InputScalar("T6   ", ImGuiDataType_U32, &cpu->x31, 0, 0, "%08X", ImGuiInputTextFlags_CharsHexadecimal);
 
         ImGui::End();
 
