@@ -1,7 +1,13 @@
 #include <sstream>
 
+#include "logging.hpp"
 #include "cpu.hpp"
 #include "imgui.h"
+
+static bool showDebug = true;
+static bool showInfo  = true;
+static bool showWarn  = true;
+static bool showError = true;
 
 static void drawRegister(uint32_t* reg, const char* name, const char* tooltip, bool readOnly = false) {
     if (readOnly) {
@@ -22,6 +28,11 @@ static void drawRegister(uint32_t* reg, const char* name, const char* tooltip, b
 }
 
 void drawRegisters(CPU* cpu) {
+    if (ImGui::Button("Reset")) {
+        for (int i = 0; i < 33; i++)
+            *cpu->registers[i] = 0;
+    }
+
     drawRegister(&cpu->pc, "PC", "Program counter");
 
     drawRegister(&cpu->x0, "Zero", "Hard-wired zero", true);
@@ -58,7 +69,34 @@ void drawRegisters(CPU* cpu) {
     drawRegister(&cpu->x31, "T6", "Temporary");
 }
 
-void drawLog(bool *showDebug, bool *showInfo, bool *showWarn, bool *showError) {
+void drawLog() {
+    if (ImGui::BeginMenuBar()) {
+        if (ImGui::BeginMenu("Filter")) {
+            ImGui::Checkbox("Debug", &showDebug);
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Show debug messages");
+            ImGui::Checkbox("Info", &showInfo);
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Show info messages");
+            ImGui::Checkbox("Warn", &showWarn);
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Show warning messages");
+            ImGui::Checkbox("Error", &showError);
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Show error messages");
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Options")) {
+            ImGui::Checkbox("Log to term", &globals::logToTerm);
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Log to the terminal, this can be slow on some platforms");
+            ImGui::EndMenu();
+        }
+
+        ImGui::EndMenuBar();
+    }
+
     std::stringstream ss(globals::logContent);
     std::string to;
 

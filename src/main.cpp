@@ -18,11 +18,6 @@
 #include "machine.cpp"
 #include "render.cpp"
 
-bool showDebug = true;
-bool showInfo  = true;
-bool showWarn  = true;
-bool showError = true;
-
 bool clockEnabled = false;
 float clockInterval = 1.0f;
 float timeSinceLastStep = 0.0f;
@@ -145,30 +140,10 @@ int main(void) {
         if (ImGui::Button("Write"))
             machine.memory.write8(addr, value);
 
-        if (ImGui::Button("Exit"))
-            globals::shouldExit = true;
-
         ImGui::End();
 
-        ImGui::Begin("Log");
-        ImGui::Checkbox("Debug", &showDebug);
-        if (ImGui::IsItemHovered())
-            ImGui::SetTooltip("Show debug messages");
-        ImGui::SameLine();
-        ImGui::Checkbox("Info", &showInfo);
-        if (ImGui::IsItemHovered())
-            ImGui::SetTooltip("Show info messages");
-        ImGui::SameLine();
-        ImGui::Checkbox("Warn", &showWarn);
-        if (ImGui::IsItemHovered())
-            ImGui::SetTooltip("Show warning messages");
-        ImGui::SameLine();
-        ImGui::Checkbox("Error", &showError);
-        if (ImGui::IsItemHovered())
-            ImGui::SetTooltip("Show error messages");
-        ImGui::Separator();
-
-        drawLog(&showDebug, &showInfo, &showWarn, &showError);
+        ImGui::Begin("Log", nullptr, ImGuiWindowFlags_MenuBar);
+        drawLog();
         ImGui::End();
 
         ImGui::Begin("Registers");

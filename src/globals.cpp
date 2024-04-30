@@ -5,6 +5,8 @@
 
 namespace globals {
     bool shouldExit = false;
+
+    bool logToTerm = true;
     std::string logContent = "";
 };
 
