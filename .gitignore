@@ -10,3 +10,7 @@ build
 
 # ImGui
 imgui.ini
+
+# Assembly
+assembly/output.txt
+assembly/*.o
