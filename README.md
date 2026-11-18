@@ -1,34 +1,27 @@
-<div align="center">
-  <a href="https://github.com/BenMcAvoy/TRV-Emu">
-    <img src="branding/logo.png" alt="Logo" width="256" height="256">
-  </a>
+# TRV-Emu
 
-  <h3 align="center">Tiny RISC-V Emulator</h3>
+TRV-Emu is an experimental RISC-V emulator written in C++. I built it as a way to explore instruction decoding, memory, CPU state and the tools that make an emulator easier to inspect while it runs.
 
-  <p align="center">
-    A simple RISC-V emulator written in C++.
-    <br />
-    <br />
-    <a href="https://github.com/BenMcAvoy/TRV-Emu/releases">Releases</a>
-    ·
-    <a href="https://github.com/BenMcAvoy/TRV-Emu/issues">Report Bugs</a>
-    ·
-    <a href="https://github.com/BenMcAvoy/TRV-Emu/issues">Request Features</a>
-  </p>
-</div>
+The project is still an early prototype. It currently fetches 32-bit words and decodes a subset of RV32I instructions for logging; it does not yet execute the full RV32I instruction set. The bundled program is a small hard-coded example.
 
-## Dependencies
+## What you can explore
 
--   CMake
--   C++20
-
-## Features
-
--   RV32I base integer instruction set
+- A C++ model of a machine, CPU and memory.
+- Instruction format and opcode decoding for a growing subset of RV32I.
+- An ImGui interface with CPU registers, logs and a memory editor.
+- Manual stepping, an optional timed clock, and byte-level memory read/write controls.
 
 ## Build
 
-```bash
-cmake -B build .
+You will need a C++20 compiler, CMake, OpenGL development libraries and a working Git installation. CMake fetches GLFW and Dear ImGui dependencies during configuration.
+
+```sh
+cmake -S . -B build
 cmake --build build
 ```
+
+Run the `TRV-Emu` executable produced in the build directory. The interface opens with a sample program loaded; use **Step** or enable the clock to advance the CPU and watch the registers and log.
+
+## Current scope
+
+This is a learning project rather than a complete RISC-V implementation. Decoding and execution are incomplete, and the current interface is primarily for inspecting the prototype. Contributions and bug reports are welcome through GitHub issues.
